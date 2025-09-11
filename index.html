@@ -1,177 +1,307 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>XR-PALS – Mixed Reality for Efficient and Intuitive Setup of Indoor Tracking Systems for Robot and Drone Localization</title>
-    <style>
-        @font-face {
-            font-family: 'Inter';
-            font-style: normal;
-            font-weight: 400;
-            font-display: swap;
-            src: url('fonts/Inter_24pt-Regular.woff') format('woff');
-        }
-        @font-face {
-            font-family: 'Inter';
-            font-style: normal;
-            font-weight: 600;
-            font-display: swap;
-            src: url('fonts/Inter_28pt-SemiBold.woff') format('woff');
-        }
-        body { font-family: 'Inter', sans-serif; margin: 0; padding: 0; background: #f9fafb; color: #1f2937; }
-        header { background: #0d9488; color: white; padding: 2rem 1rem; text-align: center; }
-        header h1 { margin: 0; font-size: 2rem; }
-        .section { padding: 2rem 1rem; max-width: 1000px; margin: auto; }
-        h2 { color: #334155; margin-top: 0; }
-        a { color: #0ea5e9; text-decoration: none; }
-        a:hover { text-decoration: underline; }
-        .contact { background: #e2e8f0; padding: 1rem; border-radius: 8px; margin-top: 1rem; }
-        .figures { display: flex; gap: 1rem; flex-wrap: wrap; }
-        .figure { flex: 1; min-width: 300px; text-align: center; }
-        .figure img { max-width: 100%; border-radius: 8px; }
-        footer { background: #e2e8f0; padding: 1rem; text-align: center; font-size: 0.9rem; }
-        .button { display: inline-block; background: #0ea5e9; color: white; padding: 0.75rem 1.5rem; border-radius: 8px; text-decoration: none; transition: background 0.3s; }
-        .button:hover { background: #0284c7; }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>XR-PALS – Mixed Reality for Efficient and Intuitive Setup of Indoor Tracking Systems for Robot and Drone Localization</title>
+  <meta name="color-scheme" content="light dark" />
+  <style>
+    @font-face {
+      font-family: 'Inter';
+      font-style: normal;
+      font-weight: 400;
+      font-display: swap;
+      src: url('fonts/Inter_24pt-Regular.woff') format('woff');
+    }
+    @font-face {
+      font-family: 'Inter';
+      font-style: normal;
+      font-weight: 600;
+      font-display: swap;
+      src: url('fonts/Inter_28pt-SemiBold.woff') format('woff');
+    }
+
+    :root {
+      /* Fresh, friendly palette */
+      --bg: #f7fafc;                /* page background */
+      --card: #ffffff;              /* cards */
+      --text: #0f172a;              /* primary text */
+      --muted: #475569;             /* secondary text */
+      --accent: #06b6d4;            /* cyan */
+      --accent-2: #22c55e;          /* mint */
+      --accent-3: #6366f1;          /* indigo for hovers */
+      --ring: rgba(14, 165, 233, .25);
+      --shadow: 0 8px 30px rgba(2, 8, 23, .08);
+      --radius: 18px;
+
+      /* Header gradient */
+      --grad-start: #0ea5e9; /* sky */
+      --grad-mid:   #06b6d4; /* cyan */
+      --grad-end:   #10b981; /* emerald */
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #0b1220;
+        --card: #0f172a;
+        --text: #e5e7eb;
+        --muted: #9ca3af;
+        --shadow: 0 10px 30px rgba(0,0,0,.35);
+        --ring: rgba(34, 197, 94, .25);
+      }
+    }
+
+    /* ------------------------------
+       Base layout
+    --------------------------------*/
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      font-family: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif;
+      color: var(--text);
+      background: radial-gradient(1200px 800px at 10% -10%, rgba(99,102,241,.08), transparent 60%),
+                  radial-gradient(1000px 700px at 110% 10%, rgba(34,197,94,.06), transparent 60%),
+                  var(--bg);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    .section {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: clamp(1.25rem, 3vw, 2.25rem) 1.25rem;
+    }
+
+    h1, h2, h3 { margin: 0 0 .6rem; line-height: 1.2; }
+    h1 { font-size: clamp(2.1rem, 3.6vw, 3rem); font-weight: 700; letter-spacing: -.01em; }
+    h2 { font-size: clamp(1.35rem, 2.2vw, 1.8rem); color: var(--text); }
+    p { color: var(--muted); margin: .5rem 0 1rem; }
+    ul { list-style-type: none;}
+    a { color: var(--accent); text-underline-offset: 3px; text-decoration-thickness: .08em; }
+    a:hover { color: var(--accent-3); }
+
+    /* ------------------------------
+       Header
+    --------------------------------*/
+    header {
+      position: relative;
+      overflow: hidden;
+      color: white;
+      text-align: center;
+      padding: 64px 16px 28px;
+      background: linear-gradient(135deg, var(--grad-start), var(--grad-mid) 40%, var(--grad-end));
+      isolation: isolate;
+    }
+    header::after {
+      content: "";
+      position: absolute; inset: -20% -10% auto -10%; height: 140%; z-index: -1;
+      background: radial-gradient(400px 260px at 15% 20%, rgba(255,255,255,.12), transparent 60%),
+                  radial-gradient(500px 300px at 85% 10%, rgba(255,255,255,.12), transparent 60%);
+      filter: blur(10px);
+    }
+
+    header small { opacity: .9; }
+    .lead { opacity: .95; font-size: clamp(1rem, 1.6vw, 1.15rem); margin-top: .25rem; }
+
+    .mast-figure { max-width: 1100px; margin: 24px auto 0; }
+    .mast-figure img {
+      width: 100%; height: auto; border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      background: rgba(255,255,255,.08);
+      outline: 1px solid rgba(255,255,255,.18);
+    }
+
+    /* ------------------------------
+       Cards & media
+    --------------------------------*/
+    .card {
+      background: var(--card);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: clamp(1rem, 2.5vw, 1.25rem);
+      backdrop-filter: saturate(120%) blur(4px);
+      border: 1px solid rgba(15, 23, 42, .06);
+    }
+
+    .figures {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 18px;
+      align-items: start;
+    }
+
+    .figure { text-align: center; }
+    .figure img {
+      width: 100%;
+      height: auto;
+      border-radius: calc(var(--radius) - 6px);
+      box-shadow: var(--shadow);
+      transition: transform .25s ease, box-shadow .25s ease;
+      background: var(--card);
+    }
+    .figure img:hover { transform: translateY(-3px); box-shadow: 0 14px 40px rgba(2,8,23,.12); }
+
+    /* Contact box */
+    .contact { border-left: 4px solid var(--accent); }
+
+    /* Buttons */
+    .button {
+      --btn-bg: var(--accent);
+      display: inline-flex; align-items: center; justify-content: center;
+      gap: .5rem;
+      padding: .8rem 1.2rem;
+      border-radius: 12px;
+      color: white; background: linear-gradient(180deg, var(--btn-bg), color-mix(in oklab, var(--btn-bg), #000 10%));
+      text-decoration: none; font-weight: 600;
+      box-shadow: 0 6px 16px var(--ring);
+      transition: transform .2s ease, box-shadow .2s ease, filter .2s ease;
+    }
+    .button:hover { transform: translateY(-1px); filter: brightness(1.05); box-shadow: 0 10px 22px var(--ring); }
+
+    /* Video wrapper */
+    #iframe_wrapper { border-radius: var(--radius); box-shadow: var(--shadow); background: #000; }
+    #iframe_wrapper iframe { border-radius: var(--radius); }
+
+    /* Footer */
+    footer {
+      margin-top: 24px;
+      color: #e6f6ff;
+      background: linear-gradient(135deg, var(--grad-end), var(--grad-mid) 50%, var(--grad-start));
+      padding: 28px 16px; text-align: center;
+    }
+    footer a { color: #fff; text-decoration: underline; text-underline-offset: 3px; }
+
+    .stack { display: grid; gap: 12px; list-style-type: none; }
+  </style>
 </head>
 <body>
-
-<header>
-    <h1>XR-PALS</h1>
-    <p>A Mixed Reality Tool to Easily Set Up Indoor Tracking for Robots and Drones</p>
-    <small>by</small> <br/>
-    <small>Dominik Grzelak and Victor Victor</small> <br/>
-    <small>TU Dresden</small> <br/>
-        <div class="figure">
-        <img src="img/overview-xr-pals.png" width="47%" alt="Overview of XR-PALS App in three steps">
+  <header>
+    <div class="section">
+      <h1>XR-PALS</h1>
+      <p class="lead">A Mixed Reality Tool to Easily Set Up Indoor Tracking for Robots and Drones</p>
+      <small>by</small><br />
+      <small>Dominik Grzelak and Victor Victor</small><br />
+      <small>TU Dresden</small>
+      <div class="mast-figure">
+        <img src="img/overview-xr-pals.png" alt="Overview of XR-PALS App in three steps" />
+      </div>
     </div>
-</header>
+  </header>
 
-<div class="section">
+  <div class="section">
     <h2>Welcome to XR-PALS</h2>
     <p>XR-PALS is an open-source research project aimed at improving indoor positioning systems for mobile robots using mixed reality technologies. It integrates ultra-wideband (UWB) tracking with intuitive spatial setup tools to simplify the deployment of localization infrastructure in dynamic indoor environments.</p>
-</div>
+  </div>
 
-<div class="section">
-    <h2>Mobile Cyber-Physical Spaces & Indoor Positioning</h2>
+  <div class="section">
+    <h2>Mobile Cyber-Physical Spaces &amp; Indoor Positioning</h2>
     <p>Precise indoor positioning is essential for safe operation of mobile robots in dynamic environments. XR-PALS addresses the challenges of configuring indoor localization systems by providing an intuitive mixed reality interface that bridges virtual and physical space. The system simplifies setup, reduces errors, and minimizes cognitive load for researchers and practitioners to facilitate non-stationary, structurally-free tracking systems.</p>
     <div class="figures">
-        <div class="figure">
-            <img src="img/crazyflie-physical-8-anchor-LPS.png" width="380" alt="">
-            <p></p>
-        </div>
-        <div class="figure">
-            <img src="img/crazyflie-physical-digital-twins.png" width="380" alt="">
-            <p></p>
-        </div>
-        <div class="figure">
-            <img src="img/cyber-physical-space.png" width="200" alt="">
-            <p></p>
-        </div>
+      <div class="figure card">
+        <img src="img/crazyflie-physical-8-anchor-LPS.png" alt="" />
+      </div>
+      <div class="figure card">
+        <img src="img/crazyflie-physical-digital-twins.png" alt="" />
+      </div>
+      <div class="figure card">
+        <img src="img/cyber-physical-space.png" alt="" />
+      </div>
     </div>
-</div>
+  </div>
 
-<div class="section">
-  <h2>Mentions</h2>
-  <ul>
-    <li>
-      <p>
-        <strong>Bitcraze Blog</strong> (Aug 2025):  
-        <a href="https://www.bitcraze.io/2025/08/making-loco-positioning-setup-faster-with-xr-pals/">
-          Making Loco Positioning Setup Faster with XR Pals
-        </a>
-      </p>
-    </li>
-    <li>
-      <p>
-        <strong>TUD School of Engineering Sciences – LinkedIn</strong> (Aug 2025):  
-        <a href="https://www.linkedin.com/posts/tud-ing_robotics-mixedreality-opensource-activity-7366102871748026368-OFdN">
-          🚀 XR-PALS beschleunigt das Einrichten von Indoor-Tracking – der Turbo für die Robotik!
-        </a>
-      </p>
-    </li>
-  </ul>
-</div>
+  <div class="section">
+    <h2>Mentions</h2>
+    <ul class="stack">
+      <li class="card">
+        <p><strong>Bitcraze Blog</strong> (Aug 2025): <a href="https://www.bitcraze.io/2025/08/making-loco-positioning-setup-faster-with-xr-pals/">Making Loco Positioning Setup Faster with XR Pals</a></p>
+      </li>
+      <li class="card">
+        <p><strong>TUD School of Engineering Sciences – LinkedIn</strong> (Aug 2025): <a href="https://www.linkedin.com/posts/tud-ing_robotics-mixedreality-opensource-activity-7366102871748026368-OFdN">XR-PALS beschleunigt das Einrichten von Indoor-Tracking – der Turbo für die Robotik!</a></p>
+      </li>
+      <li class="card">
+        <p><strong>NEWSLETTER # 104 Faculty of Computer Science (TU Dresden)</strong> (Aug 2025): <a href="https://tu-dresden.de/ing/informatik/ressourcen/dateien/newsletter/newsletter-august2025_104.pdf">Page 3/7</a></p>
+      </li>
+    </ul>
+  </div>
 
-<div class="section">
+  <div class="section">
     <h2>Getting Started</h2>
     <p>This video demonstrator shows how to manually set up and use XR-PALS together with the Crazyflie Loco Positioning System. It provides a quick overview of how the mixed reality interface simplifies the placement and configuration of UWB anchors for precise indoor localization.</p>
     <div id="iframe_wrapper" style="position: relative; overflow: hidden; width:100%; padding-top:56.25%;">
-        <iframe src="https://videocampus.sachsen.de/media/embed?key=f16fb2b1154ca24d7ffb1f4ecb6e0b70&width=720&height=405&autoplay=false&controls=true&autolightsoff=false&loop=false&chapters=false&playlist=false&related=false&responsive=true&t=0&loadonclick=true&thumb=true" 
-            data-src="https://videocampus.sachsen.de/media/embed?key=f16fb2b1154ca24d7ffb1f4ecb6e0b70&width=720&height=405&autoplay=false&controls=true&autolightsoff=false&loop=false&chapters=false&playlist=false&related=false&responsive=true&t=0&loadonclick=true" 
-            width="100%" height="100%" title="Cyber-Physical Spaces: XR-Assisted Deployment of UWB Positioning Systems" 
-            frameborder="0" allowfullscreen="allowfullscreen" allowtransparency="true" scrolling="no" aria-label="media embed code" 
-            style="top:0; bottom:0; left:0; right:0; position:absolute;">
-        </iframe>
+      <iframe src="https://videocampus.sachsen.de/media/embed?key=f16fb2b1154ca24d7ffb1f4ecb6e0b70&width=720&height=405&autoplay=false&controls=true&autolightsoff=false&loop=false&chapters=false&playlist=false&related=false&responsive=true&t=0&loadonclick=true&thumb=true"
+              width="100%" height="100%" title="Cyber-Physical Spaces: XR-Assisted Deployment of UWB Positioning Systems"
+              frameborder="0" allowfullscreen allowtransparency="true" scrolling="no"
+              style="top:0; bottom:0; left:0; right:0; position:absolute;"></iframe>
     </div>
-    <div class="figure">
-        <img src="qr-code.png" width="280" alt="QR code providing a link to the video demonstrator">
-        <p><small><a href="https://videocampus.sachsen.de/video/cyber-physical-spaces-xr-deployment-uwb-positioning-systems/f16fb2b1154ca24d7ffb1f4ecb6e0b70">https://videocampus.sachsen.de/video/cyber-physical-spaces-xr-deployment-uwb-positioning-systems/f16fb2b1154ca24d7ffb1f4ecb6e0b70</a></small></p>
+    <div class="figure" style="margin-top:14px;">
+      <img src="qr-code.png" alt="QR code providing a link to the video demonstrator" style="width: 280px;"/>
+      <p><small><a href="https://videocampus.sachsen.de/video/cyber-physical-spaces-xr-deployment-uwb-positioning-systems/f16fb2b1154ca24d7ffb1f4ecb6e0b70">https://videocampus.sachsen.de/video/cyber-physical-spaces-xr-deployment-uwb-positioning-systems/f16fb2b1154ca24d7ffb1f4ecb6e0b70</a></small></p>
     </div>
-</div>
+  </div>
 
-<div class="section">
+  <div class="section">
     <h2>Performance Benefits</h2>
     <div class="figures">
-        <div class="figure">
-            <img src="img/user-study-result-completion-time.png" width="400" alt="Completion Time Benefit">
-            <p>Reduction in Setup Completion Time</p>
-        </div>
-        <div class="figure">
-            <img src="img/user-study-result-accuracy.png" width="400" alt="Accuracy Benefit">
-            <p>Increased Measurement Accuracy</p>
-        </div>
+      <div class="figure card">
+        <img src="img/user-study-result-completion-time.png" alt="Completion Time Benefit" />
+        <p>Reduction in Setup Completion Time</p>
+      </div>
+      <div class="figure card">
+        <img src="img/user-study-result-accuracy.png" alt="Accuracy Benefit" />
+        <p>Increased Measurement Accuracy</p>
+      </div>
     </div>
-</div>
+  </div>
 
-<div class="section">
-    <h2>User Study & Publication</h2>
+  <div class="section">
+    <h2>User Study &amp; Publication</h2>
     <p>A comprehensive user study compared XR-PALS to traditional laser-based setup methods. The study demonstrated that XR-PALS significantly reduces task completion time, measurement errors, and cognitive workload.</p>
-    <p><a href="https://link.springer.com/chapter/10.1007/978-3-031-97772-5_2" target="_blank">Read the full publication here</a></p>
-</div>
+    <p><a class="button" href="https://link.springer.com/chapter/10.1007/978-3-031-97772-5_2" target="_blank" rel="noopener">Read the full publication</a></p>
+  </div>
 
-<!-- <div class="section">
+  <!-- <div class="section">
     <h2>VR App Download</h2>
     <p>The VR interface of XR-PALS allows intuitive manipulation of anchor positions directly in virtual space, synced to the physical hardware setup.</p>
     <p><a href="#" class="button" target="_blank">Download XR-PALS App</a></p>
-</div> -->
+  </div> -->
 
-<div class="section">
+  <div class="section">
     <h2>Loco Positioning System of Crazyflie</h2>
-    <p>The XR-PALS system leverages the <a href="https://www.bitcraze.io/documentation/system/positioning/loco-positioning-system/" target="_blank">Crazyflie Loco Positioning System</a>, a UWB-based localization platform. Traditional setup of UWB anchors requires time-consuming manual measurements, often using laser distance meters and complex calculations for non-rectangular layouts. XR-PALS replaces this with a seamless mixed-reality approach.</p>
-</div>
+    <p>The XR-PALS system leverages the <a href="https://www.bitcraze.io/documentation/system/positioning/loco-positioning-system/" target="_blank" rel="noopener">Crazyflie Loco Positioning System</a>, a UWB-based localization platform. Traditional setup of UWB anchors requires time-consuming manual measurements, often using laser distance meters and complex calculations for non-rectangular layouts. XR-PALS replaces this with a seamless mixed-reality approach.</p>
+  </div>
 
-<div class="section">
+  <div class="section">
     <h2>Hardware Setup Overview</h2>
-    <div class="figure">
-        <img src="img/hardware-overview-detailed-LPS.jpg" width="400" alt="Hardware Setup Overview">
-        <p>Anchors equipped with UWB modules mounted on moveable tripods.</p>
-    </div>
+    <div class="figure card">
+      <img src="img/hardware-overview-detailed-LPS.jpg" alt="Hardware Setup Overview" style="width: 280px;"/>
+      <p>Anchors equipped with UWB modules mounted on moveable tripods.</p>
     <ul>
-        <li><a href="https://www.bitcraze.io/documentation/system/positioning/loco-positioning-system/">Crazyflie Loco Positioning System (UWB)</a></li>
-        <li>XR Headset</li>
-        <li>PC with XR-PALS middleware installed</li>
-        <li>(Optional) Custom-designed tripods and tripod-mounted anchor holders</li>
+      <li><a href="https://www.bitcraze.io/documentation/system/positioning/loco-positioning-system/">Crazyflie Loco Positioning System (UWB)</a></li>
+      <li>XR Headset</li>
+      <li>PC with XR-PALS middleware installed</li>
+      <li>(Optional) Custom-designed tripods and tripod-mounted anchor holders</li>
     </ul>
-</div>
-
-<div class="section">
-    <div class="contact">
-         <p>You are welcome to contact us for consulting services on ordering, setup, usage, integration, or extension of the XR-PALS system. 
-            This project is primarily aimed at research institutions, the open-source community, and interested private individuals.</p>
-            <p><strong>Contact:</strong> dominik [dot] grzelak [ät] tu-dresden [dot] de</p>
     </div>
-</div>
+  </div>
 
-<footer>
-    <p>The research and development of this software was funded by the German Research Foundation (DFG, Deutsche Forschungsgemeinschaft) <br/> as part of Germany's Excellence Strategy - EXC 2050/1 - Project ID 390696704 - Cluster of Excellence <br/> "Centre for Tactile Internet with Human-in-the-Loop" (CeTI) of Technische Universität Dresden.</p>
-    <p>Thanks to <a href="https://www.bitcraze.io/">Bitcraze AB</a> for developing the Crazyflie ecosystem.</p>
-    <p><a rel="license" href="https://creativecommons.org/licenses/by/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by/4.0/80x15.png"></a> The content on this website is licensed under a Creative Commons Attribution 4.0 International License.</p>
-    <p><a href="imprint-and-data-privacy.html">Imprint and Data Privacy</a></p>
-</footer>
+  <div class="section">
+    <div class="contact card">
+      <p><strong>Contact:</strong> dominik [dot] grzelak [ät] tu-dresden [dot] de</p>
+    </div>
+  </div>
 
-<!-- 100% privacy-first analytics -->
-<script async src="https://scripts.simpleanalyticscdn.com/latest.js"></script>
+  <footer>
+    <div class="section" style="color:#eaf8ff">
+      <p>The research and development of this software was funded by the German Research Foundation (DFG, Deutsche Forschungsgemeinschaft) <br /> as part of Germany's Excellence Strategy - EXC 2050/1 - Project ID 390696704 - Cluster of Excellence <br /> "Centre for Tactile Internet with Human-in-the-Loop" (CeTI) of Technische Universität Dresden (2025).</p>
+      <p>Thanks to <a href="https://www.bitcraze.io/">Bitcraze AB</a> for developing the Crazyflie ecosystem.</p>
+      <p><a rel="license" href="https://creativecommons.org/licenses/by/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by/4.0/80x15.png" /></a> The content on this website is licensed under a Creative Commons Attribution 4.0 International License.</p>
+      <p><a href="imprint-and-data-privacy.html">Imprint and Data Privacy</a></p>
+    </div>
+  </footer>
+
+  <!-- 100% privacy-first analytics -->
+  <script async src="https://scripts.simpleanalyticscdn.com/latest.js"></script>
 </body>
 </html>
