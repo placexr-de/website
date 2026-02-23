@@ -5,5 +5,7 @@ By integrating virtual and physical spatial references through an intuitive VR i
 
 <img src="qr-code.png" style="width: 180px;" />
 
-**Contact for Inquiries:** Dominik Grzelak  |  **Main Developer (Technical Support):** Victor Victor  
+Main Developer: Victor Victor
+
+Research: Dominik Grzelak  
 
